@@ -47,5 +47,3 @@ Currently exploring machine learning and real-world data applications.
 <img src="https://github-profile-trophy.vercel.app/?username=rrvmeesa&theme=radical&no-frame=true&no-bg=true" alt="GitHub Trophies" />
 
 ---
-
-> Proudly created with ❤️

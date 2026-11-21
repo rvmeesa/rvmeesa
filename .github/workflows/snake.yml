@@ -19,6 +19,20 @@ jobs:
             dist/snake.svg?color_snake=#FF8FB8&color_dots=#FFF0F7,#FFD6E8,#F9B4D2,#E6A8F0,#C79BEA&color_dot_border=#FFE4F0
             dist/snake-dark.svg?color_snake=#FFB3D1&color_dots=#2B1F2E,#5C3A5E,#A0628F,#E08DBE,#FFC2E0&color_dot_border=#3A2A3D
 
+      - name: Hide the bottom bar
+        run: |
+          python3 - <<'PY'
+          import re, glob
+          for f in glob.glob('dist/*.svg'):
+              s = open(f).read()
+              m = re.search(r'viewBox="([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"', s)
+              x, y, w, h = map(float, m.groups())
+              nh = h - 40
+              s = s.replace(m.group(0), f'viewBox="{x:g} {y:g} {w:g} {nh:g}"', 1)
+              s = re.sub(r'(<svg[^>]*?)height="([\d.]+)"', lambda k: f'{k.group(1)}height="{float(k.group(2))*nh/h:g}"', s, count=1)
+              open(f, 'w').write(s)
+          PY
+
       - uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output

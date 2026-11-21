@@ -22,7 +22,8 @@ jobs:
       - name: Hide the bottom bar
         run: |
           python3 - <<'PY'
-          import re, glob
+          import re, glob, os
+          os.makedirs('out', exist_ok=True)
           for f in glob.glob('dist/*.svg'):
               s = open(f).read()
               m = re.search(r'viewBox="([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"', s)
@@ -30,12 +31,12 @@ jobs:
               nh = h - 40
               s = s.replace(m.group(0), f'viewBox="{x:g} {y:g} {w:g} {nh:g}"', 1)
               s = re.sub(r'(<svg[^>]*?)height="([\d.]+)"', lambda k: f'{k.group(1)}height="{float(k.group(2))*nh/h:g}"', s, count=1)
-              open(f, 'w').write(s)
+              open('out/' + os.path.basename(f), 'w').write(s)
           PY
 
       - uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
-          build_dir: dist
+          build_dir: out
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

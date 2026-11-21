@@ -19,18 +19,45 @@ jobs:
             dist/snake.svg?color_snake=#FF8FB8&color_dots=#FFF0F7,#FFD6E8,#F9B4D2,#E6A8F0,#C79BEA&color_dot_border=#FFE4F0
             dist/snake-dark.svg?color_snake=#FFB3D1&color_dots=#2B1F2E,#5C3A5E,#A0628F,#E08DBE,#FFC2E0&color_dot_border=#3A2A3D
 
-      - name: Hide the bottom bar
+      - name: Make the snake cute 🎀
         run: |
           python3 - <<'PY'
           import re, glob, os
           os.makedirs('out', exist_ok=True)
           for f in glob.glob('dist/*.svg'):
               s = open(f).read()
+              dark = 'dark' in f
+              # 1) trim the bottom bar
               m = re.search(r'viewBox="([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"', s)
               x, y, w, h = map(float, m.groups())
-              nh = h - 40
+              nh = h - 2 * abs(x)
               s = s.replace(m.group(0), f'viewBox="{x:g} {y:g} {w:g} {nh:g}"', 1)
               s = re.sub(r'(<svg[^>]*?)height="([\d.]+)"', lambda k: f'{k.group(1)}height="{float(k.group(2))*nh/h:g}"', s, count=1)
+              # 2) cute strawberry-snake styling
+              n = len(set(re.findall(r'class="s s(\d+)"', s)))
+              body = ['#FF9CC2', '#FFD6E7', '#F26FA4']
+              css = '.u{display:none!important}'
+              css += '.s{stroke:#7A3B5C;stroke-width:1.4}'
+              css += '.s.s0{fill:#FF9CC2}'
+              for i in range(1, n):
+                  css += f'.s.s{i}{{fill:{body[i % 3]}}}'
+              css += '.s.k{fill:#2B1A24;stroke:none}.s.hl{fill:#FFFFFF;stroke:none}'
+              css += '.s.bw{fill:#FF8FC0;stroke:#7A3B5C;stroke-width:1}.s.bk{fill:#E8559A;stroke:#7A3B5C;stroke-width:1}'
+              css += '.s.bl{fill:#FF6F9F;stroke:none;opacity:.8}'
+              s = s.replace('</style>', css + '</style>', 1)
+              # 3) face + bow riding on the head (same s0 animation)
+              extra = (
+                  '<rect class="s s0 bl" x="3" y="9" width="3" height="2" rx="1"/>'
+                  '<rect class="s s0 bl" x="10" y="9" width="3" height="2" rx="1"/>'
+                  '<rect class="s s0 k" x="5" y="5" width="3" height="3.5" rx="1"/>'
+                  '<rect class="s s0 k" x="9" y="5" width="3" height="3.5" rx="1"/>'
+                  '<rect class="s s0 hl" x="5.6" y="5.4" width="1.2" height="1.2"/>'
+                  '<rect class="s s0 hl" x="9.6" y="5.4" width="1.2" height="1.2"/>'
+                  '<rect class="s s0 bw" x="1" y="-4" width="6" height="5" rx="1.5"/>'
+                  '<rect class="s s0 bw" x="9" y="-4" width="6" height="5" rx="1.5"/>'
+                  '<rect class="s s0 bk" x="6" y="-3" width="4" height="3.5" rx="1"/>'
+              )
+              s = s.replace('</svg>', extra + '</svg>', 1)
               open('out/' + os.path.basename(f), 'w').write(s)
           PY
 

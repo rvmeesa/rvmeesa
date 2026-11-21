@@ -152,13 +152,12 @@ open_to:   data & ml collabs 🌱
 
 ## ˚₊‧꒰ა 🎀 my lil snake friend ໒꒱ ‧₊˚
 
-<p align="center"><sub>♡ she eats my contributions every day ♡ 🍓🐍💗</sub></p>
-
 <div align="center">
 
+<sub>♡ she eats my contributions every day ♡ 🍓🐍💗</sub>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rvmeesa/rvmeesa/output/snake-dark.svg" />
-  <img alt="cute pink snake" src="https://raw.githubusercontent.com/rvmeesa/rvmeesa/output/snake.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rvmeesa/rvmeesa/output/snake-dark.svg?v=4" />
+  <img alt="cute pink snake" src="https://raw.githubusercontent.com/rvmeesa/rvmeesa/output/snake.svg?v=4" />
 </picture>
 
 </div>

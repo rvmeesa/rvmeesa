@@ -27,13 +27,15 @@ jobs:
           for f in glob.glob('dist/*.svg'):
               s = open(f).read()
               dark = 'dark' in f
-              # 1) trim the bottom bar
+                  # 1) crop to just the grid so the snake never shows outside the boxes
               m = re.search(r'viewBox="([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"', s)
               x, y, w, h = map(float, m.groups())
-              nh = h - 2 * abs(x)
-              s = s.replace(m.group(0), f'viewBox="{x:g} {y:g} {w:g} {nh:g}"', 1)
-              s = re.sub(r'(<svg[^>]*?)height="([\d.]+)"', lambda k: f'{k.group(1)}height="{float(k.group(2))*nh/h:g}"', s, count=1)
-              # 2) cute strawberry-snake styling
+              c = abs(x)
+              nw, nh = w - 2 * c, h - 5 * c
+              s = s.replace(m.group(0), f'viewBox="0 0 {nw:g} {nh:g}"', 1)
+              s = re.sub(r'(<svg[^>]*?)width="[\d.]+"', lambda k: f'{k.group(1)}width="{nw:g}"', s, count=1)
+              s = re.sub(r'(<svg[^>]*?)height="[\d.]+"', lambda k: f'{k.group(1)}height="{nh:g}"', s, count=1)
+          # 2) cute strawberry-snake styling
               n = len(set(re.findall(r'class="s s(\d+)"', s)))
               body = ['#FF9CC2', '#FFD6E7', '#F26FA4']
               css = '.u{display:none!important}'
